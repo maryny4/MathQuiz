@@ -12,16 +12,11 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
-        startGameButton.onClick.AddListener(() => StartCoroutine(StartGame()));
+        startGameButton.onClick.AddListener(() => StartGame());
     }
 
-    IEnumerator StartGame()
+    void StartGame()
     {
-        asyncLoad = SceneManager.LoadSceneAsync("GameScene");
-        asyncLoad.allowSceneActivation = false;
-        
-        //TODO show transition screen
-        yield return new WaitForSeconds(.5f);
-        asyncLoad.allowSceneActivation = true;
+        StartCoroutine(SceneLoader.LoadScene(2));
     }
 }

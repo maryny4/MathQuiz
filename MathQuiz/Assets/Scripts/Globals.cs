@@ -1,13 +1,14 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
 public class Globals : MonoBehaviour
 {
     public static Globals instance;
 
     public RiddleDataList riddleDataList;
-    
+    public float transitionDuration = .38f;
+    public float transitionDelay = .12f; 
+
     private void Awake()
     {
         if (instance != null)
@@ -19,11 +20,28 @@ public class Globals : MonoBehaviour
         instance = this;
 
         DontDestroyOnLoad(gameObject);
+        Application.targetFrameRate = 60;
+    }
+
+    public int GetBestScore(int score)
+    {
+        int bestScore = PlayerPrefs.GetInt("SCORE");
+        
+        if (score > bestScore)
+        {
+            bestScore = score;
+            PlayerPrefs.SetInt("SCORE", bestScore);
+        }
+
+        return bestScore;
     }
 }
 
 public static class GameAction
 {
     public static Action<int> onClickAnswer;
-    public static Action generateQuestion;
+    public static Action<List<string>> setAnswers;
+    public static Action showTransitionScreen;
+    public static Action<int, int> setButtonsColor;//1 - correct button / 2 - wrong button
+    public static Action<bool> startGame;
 }

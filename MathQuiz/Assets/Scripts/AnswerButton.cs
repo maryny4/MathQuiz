@@ -1,11 +1,41 @@
+using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class AnswerButton : MonoBehaviour
 {
+    private Button button;
+    [SerializeField] private TextMeshProUGUI answerText;
+    [SerializeField] private Color defaultColor;
+    [SerializeField] private Color correctColor;
+    [SerializeField] private Color wrongColor;
     void Awake()
     {
-        Button button = GetComponent<Button>();
+        button = GetComponent<Button>();
         button.onClick.AddListener(() => GameAction.onClickAnswer?.Invoke(transform.GetSiblingIndex()));
+        GameAction.setAnswers += SetAnswer;
+        GameAction.setButtonsColor += SetButtonColor;
+        
+        button.image.color = defaultColor;
+    }
+
+    private void OnDestroy()
+    {
+        GameAction.setAnswers -= SetAnswer;
+        GameAction.setButtonsColor -= SetButtonColor;
+    }
+
+    void SetAnswer(List<string> answers)
+    {
+        StartCoroutine(TextUpdater.UpdateText(answerText, answers[transform.GetSiblingIndex()]));
+        button.image.color = defaultColor;
+    }
+
+    void SetButtonColor(int correctAnswer, int wrongAnswer)
+    {
+        if (correctAnswer == transform.GetSiblingIndex()) button.image.color = correctColor;
+        else if (wrongAnswer == transform.GetSiblingIndex()) button.image.color = wrongColor;
     }
 }
