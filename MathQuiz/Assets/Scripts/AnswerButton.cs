@@ -17,6 +17,7 @@ public class AnswerButton : MonoBehaviour
         button.onClick.AddListener(() => GameAction.onClickAnswer?.Invoke(transform.GetSiblingIndex()));
         GameAction.setAnswers += SetAnswer;
         GameAction.setButtonsColor += SetButtonColor;
+        GameAction.timeIsOver += SetWrongColor;
         
         button.image.color = defaultColor;
     }
@@ -25,6 +26,7 @@ public class AnswerButton : MonoBehaviour
     {
         GameAction.setAnswers -= SetAnswer;
         GameAction.setButtonsColor -= SetButtonColor;
+        GameAction.timeIsOver -= SetWrongColor;
     }
 
     void SetAnswer(List<string> answers)
@@ -38,4 +40,6 @@ public class AnswerButton : MonoBehaviour
         if (correctAnswer == transform.GetSiblingIndex()) button.image.color = correctColor;
         else if (wrongAnswer == transform.GetSiblingIndex()) button.image.color = wrongColor;
     }
+
+    private void SetWrongColor() => button.image.color = wrongColor;
 }

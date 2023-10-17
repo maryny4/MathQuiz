@@ -43,5 +43,6 @@ public static class GameAction
     public static Action<List<string>> setAnswers;
     public static Action showTransitionScreen;
     public static Action<int, int> setButtonsColor;//1 - correct button / 2 - wrong button
+    public static Action timeIsOver;
     public static Action<bool> startGame;
 }

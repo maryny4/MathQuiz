@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,7 @@ public class GameOverPanel : PageAnimation
 {
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI bestScoreText;
+    [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button backToMenuButton;
 
@@ -16,13 +18,18 @@ public class GameOverPanel : PageAnimation
         base.Start();
     }
 
-    public void ShowPanel(int score)
+    public void ShowPanelWithDelay(int score, string title, float delay = 1)
     {
+        StartCoroutine(ShowPanel(score, title, delay));
+    }
+
+    IEnumerator ShowPanel(int score, string title, float delay)
+    {
+        yield return new WaitForSeconds(delay);
         int bestScore = Globals.instance.GetBestScore(score);
-        
+        titleText.text = title;
         scoreText.text = "SCORE: " + score;
         bestScoreText.text = "BEST SCORE: " + bestScore;
-        
         base.ShowPanel();
     }
 

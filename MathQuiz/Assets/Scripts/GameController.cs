@@ -55,7 +55,7 @@ public class GameController : MonoBehaviour
     void CheckAnswer(int answerIndex)
     {
         if (shuffledCurrentAnswers[answerIndex] == currentRiddle.GetAnswers[0]) AnsweredCorrectly();
-        else StartCoroutine(AnsweredWrongly(answerIndex));
+        else AnsweredWrongly(answerIndex);
     }
 
     void GenerateRiddle()
@@ -76,14 +76,13 @@ public class GameController : MonoBehaviour
         GenerateRiddle();
     }
 
-    IEnumerator AnsweredWrongly(int wrongAnswer)
+    void AnsweredWrongly(int wrongAnswer)
     {
         Debug.Log("AnsweredWrongly");
         answersCanvasGroup.interactable = false;
         GameAction.setButtonsColor(FindCorrecAnswer(), wrongAnswer);
         useTimer = false;
-        yield return new WaitForSeconds(1);
-        gameOverPanel.ShowPanel(score);
+        gameOverPanel.ShowPanelWithDelay(score, "WRONG ANSWER");
     }
 
     int FindCorrecAnswer()
@@ -92,15 +91,6 @@ public class GameController : MonoBehaviour
             if (shuffledCurrentAnswers[i] == currentRiddle.GetAnswers[0]) return i;
         
         return 10;
-    }
-    
-    IEnumerator UpdateText(TextMeshProUGUI text, string value, float delay = .1f, Ease ease = Ease.InOutBack)
-    {
-        Vector3 textScale = text.transform.localScale;
-        text.transform.DOScale(Vector3.zero, delay / 2).SetEase(ease);
-        yield return new WaitForSeconds(delay / 2);
-        text.text = value;
-        text.transform.DOScale(textScale, delay / 2).SetEase(ease);
     }
 
     void Timer()
@@ -112,6 +102,9 @@ public class GameController : MonoBehaviour
         if (timer <= 0)
         {
             useTimer = false;
+            answersCanvasGroup.interactable = false;
+            GameAction.timeIsOver?.Invoke();
+            gameOverPanel.ShowPanelWithDelay(score, "TIME IS OVER");
             Debug.Log("time has passed");
         }
     }

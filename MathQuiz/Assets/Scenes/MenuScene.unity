@@ -3125,7 +3125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2b3b4906e06b4409cf83b6e8a04025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animDuration: 0.4
+  animDuration: 0.3
   background: {fileID: 2078775553}
   animatedElements:
   - {fileID: 1723077287}
