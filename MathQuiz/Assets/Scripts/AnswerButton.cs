@@ -14,7 +14,7 @@ public class AnswerButton : MonoBehaviour
     void Awake()
     {
         button = GetComponent<Button>();
-        button.onClick.AddListener(() => GameAction.onClickAnswer?.Invoke(transform.GetSiblingIndex()));
+        button.onClick.AddListener(() => OnClickAnswer());
         GameAction.setAnswers += SetAnswer;
         GameAction.setButtonsColor += SetButtonColor;
         GameAction.timeIsOver += SetWrongColor;
@@ -27,6 +27,12 @@ public class AnswerButton : MonoBehaviour
         GameAction.setAnswers -= SetAnswer;
         GameAction.setButtonsColor -= SetButtonColor;
         GameAction.timeIsOver -= SetWrongColor;
+    }
+
+    void OnClickAnswer()
+    {
+        GameAction.onClickAnswer?.Invoke(transform.GetSiblingIndex());
+        SoundController.instance.PlayButtonClickSound();
     }
 
     void SetAnswer(List<string> answers)

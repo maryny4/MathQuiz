@@ -17,6 +17,7 @@ public class MenuController : MonoBehaviour
 
     void StartGame()
     {
+        SoundController.instance.PlayButtonClickSound();
         StartCoroutine(SceneLoader.LoadScene(2));
     }
 }

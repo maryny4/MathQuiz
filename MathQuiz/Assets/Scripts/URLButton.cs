@@ -9,6 +9,12 @@ public class URLButton : MonoBehaviour
     void Start()
     {
         Button button = GetComponent<Button>();
-        button.onClick.AddListener(() => Application.OpenURL(URL));
+        button.onClick.AddListener(() => OpenURL());
+    }
+
+    void OpenURL()
+    {
+        SoundController.instance.PlayButtonClickSound();
+        Application.OpenURL(URL);
     }
 }

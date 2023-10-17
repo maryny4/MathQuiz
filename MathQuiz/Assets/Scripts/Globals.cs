@@ -45,4 +45,5 @@ public static class GameAction
     public static Action<int, int> setButtonsColor;//1 - correct button / 2 - wrong button
     public static Action timeIsOver;
     public static Action<bool> startGame;
+    public static Action<bool> soundEnable;
 }

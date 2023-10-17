@@ -12,8 +12,6 @@ public class TransitionScreen : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().buildIndex != 0) HideTransition();
         GameAction.showTransitionScreen += ShowTransition;
-        
-        
     }
     private void OnDestroy()
     {

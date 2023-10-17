@@ -14,7 +14,7 @@ public class GameOverPanel : PageAnimation
     private void Start()
     {
         restartButton.onClick.AddListener(() => RestartGame());
-        backToMenuButton.onClick.AddListener(() => StartCoroutine(SceneLoader.LoadScene(1)));
+        backToMenuButton.onClick.AddListener(() => OpenMenu());
         base.Start();
     }
 
@@ -35,7 +35,14 @@ public class GameOverPanel : PageAnimation
 
     void RestartGame()
     {
+        SoundController.instance.PlayButtonClickSound();
         GameAction.startGame?.Invoke(true);
         HidePanel();
+    }
+
+    void OpenMenu()
+    {
+        SoundController.instance.PlayButtonClickSound();
+        StartCoroutine(SceneLoader.LoadScene(1));
     }
 }
