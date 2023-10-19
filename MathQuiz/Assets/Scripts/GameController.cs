@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
     
     private List<string> shuffledCurrentAnswers;
     [SerializeField]private List<string> Answers;
-    private Riddle currentRiddle;
+    private Riddle currentRiddle = new Riddle();
     
     void Start()
     {
@@ -61,10 +61,46 @@ public class GameController : MonoBehaviour
 
     void GenerateRiddle()
     {
-        currentRiddle = new Riddle();
-        currentRiddle.SetRiddle("1+1");
-        currentRiddle.SetAnswers(Answers);//0 correct, 1-2-3 wrong
+        string riddle = "riddle";
+        List<string> answers = new List<string>{ "correct", "wrong", "wrong1", "wrong2" };
         
+        switch (Globals.instance.GetCurrentGameMode)
+        {
+            case GAME_MODE.FULL:
+                
+                riddle = "FULL";
+                answers = new List<string>{ "correct", "wrong", "wrong1", "wrong2" };
+                break;
+            case GAME_MODE.X_3:
+                
+                riddle = "X_3";
+                answers = new List<string>{ "correct", "wrong", "wrong1", "wrong2" };
+                break;
+            case GAME_MODE.FIND_X:
+                
+                riddle = "FIND_X";
+                answers = new List<string>{ "correct", "wrong", "wrong1", "wrong2" };
+                break;
+            case GAME_MODE.SUM_AND_SUBTRACT:
+                
+                riddle = "+ -";
+                answers = new List<string>{ "correct", "wrong", "wrong1", "wrong2" };
+                break;
+            case GAME_MODE.DOUBLE:
+                
+                riddle = "DOUBLE";
+                answers = new List<string>{ "correct", "wrong", "wrong1", "wrong2" };
+                break;
+            case GAME_MODE.MULTIPLICATION_AND_DIVISION:
+                
+                riddle = "* /";
+                answers = new List<string>{ "correct", "wrong", "wrong1", "wrong2" };
+                break;
+        }
+        
+        riddle = riddle.Replace('/', '÷');
+        currentRiddle.SetRiddle(riddle);
+        currentRiddle.SetAnswers(answers);
         
         shuffledCurrentAnswers = new List<string>(currentRiddle.GetAnswers);
         ListShuffler.Shuffle(shuffledCurrentAnswers);

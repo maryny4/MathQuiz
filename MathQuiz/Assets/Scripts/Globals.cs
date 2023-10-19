@@ -7,8 +7,12 @@ public class Globals : MonoBehaviour
 
     public RiddleDataList riddleDataList;
     public float transitionDuration = .38f;
-    public float transitionDelay = .12f; 
-
+    public float transitionDelay = .12f;
+    
+    private GAME_MODE currentGameMode;
+    public GAME_MODE GetCurrentGameMode => currentGameMode;
+    public void SetCurrentGameMode(GAME_MODE gameMode) => currentGameMode = gameMode;
+    
     private void Awake()
     {
         if (instance != null)
@@ -22,6 +26,7 @@ public class Globals : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         Application.targetFrameRate = 60;
     }
+
 
     public int GetBestScore(int score)
     {
@@ -46,4 +51,14 @@ public static class GameAction
     public static Action timeIsOver;
     public static Action<bool> startGame;
     public static Action<bool> soundEnable;
+}
+
+public enum GAME_MODE
+{
+    FULL,
+    FIND_X,
+    DOUBLE,
+    X_3,
+    SUM_AND_SUBTRACT,
+    MULTIPLICATION_AND_DIVISION,
 }

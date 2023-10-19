@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class SettingsPanel : PageAnimation
 {
-    //todo dodać system trudności
-
     [SerializeField] private Button openSettingsButton;
     [SerializeField] private Button closeSettingsButton;
     public void Start()
