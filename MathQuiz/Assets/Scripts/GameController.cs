@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour
     private int score;
     
     private List<string> shuffledCurrentAnswers;
+    [SerializeField]private List<string> Answers;
     private Riddle currentRiddle;
     
     void Start()
@@ -60,7 +61,11 @@ public class GameController : MonoBehaviour
 
     void GenerateRiddle()
     {
-        currentRiddle = Globals.instance.riddleDataList.GetRandomRiddle();
+        currentRiddle = new Riddle();
+        currentRiddle.SetRiddle("1+1");
+        currentRiddle.SetAnswers(Answers);//0 correct, 1-2-3 wrong
+        
+        
         shuffledCurrentAnswers = new List<string>(currentRiddle.GetAnswers);
         ListShuffler.Shuffle(shuffledCurrentAnswers);
         GameAction.setAnswers?.Invoke(shuffledCurrentAnswers);
