@@ -19,7 +19,7 @@ public class Globals : MonoBehaviour
         rangeOfDifficulty = value;
         PlayerPrefs.SetInt("rangeOfDifficulty", rangeOfDifficulty);
     }
-    public (int, int) GetRangeOfDifficulty => (-rangeOfDifficulty, rangeOfDifficulty);
+    public int GetRangeOfDifficulty => rangeOfDifficulty;
     ///
     private void Awake()
     {
