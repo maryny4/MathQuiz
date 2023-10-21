@@ -230,7 +230,53 @@ public class FloatingPointExpressionGenerator
     }
 }
 
+public class GeneratorEquation_Find_X
+{
+    public static string GenerateRandomEquation_Find_X(int minValue, int maxValue)
+    {
+        int a, b, c;
+        char operation;
 
+        do
+        {
+            a = Random.Range(minValue, maxValue);
+            b = Random.Range(minValue, maxValue);
+            c = Random.Range(minValue, maxValue);
+            operation = Random.Range(0, 2) == 0 ? '+' : '-';
+        } while (a == c || b == c);
+
+        return $"{a} {operation} x = {c}";
+    }
+
+
+    public static int CalculateEquationEquation_Find_X(string equation)
+    {
+        // Разбиваем уравнение на части
+        string[] elements = equation.Split(' ');
+
+        if (elements.Length != 5)
+        {
+            throw new ArgumentException("Invalid equation format.");
+        }
+
+        int a = int.Parse(elements[0]);
+        char operation = elements[1][0];
+        int c = int.Parse(elements[4]);
+
+        if (operation == '+')
+        {
+            return c - a;
+        }
+        else if (operation == '-')
+        {
+            return a - c;
+        }
+        else
+        {
+            throw new ArgumentException("Invalid operation.");
+        }
+    }
+}
 
 
 
