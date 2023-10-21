@@ -13,7 +13,7 @@ public class RangeOfDifficulty : MonoBehaviour
     {
         slider = GetComponent<Slider>();
         slider.onValueChanged.AddListener(delegate { OnValueChanged(); });
-        slider.value = Mathf.InverseLerp(minValue, maxValue, Globals.instance.GetRangeOfDifficulty.Item2);
+        slider.value = Mathf.InverseLerp(minValue, maxValue, Globals.instance.GetRangeOfDifficulty);
         OnValueChanged();
     }
     void OnValueChanged()
