@@ -20,7 +20,11 @@ public class GameController : MonoBehaviour
     private bool useTimer = true;
     private bool useSecondLife = false;
     private int score;
-
+    
+    private bool isPaused = false;
+    private DateTime pauseTime;
+    private DateTime resumeTime;
+    
     private List<string> shuffledCurrentAnswers;
     [SerializeField] private List<string> Answers;
     private Riddle currentRiddle = new Riddle();
@@ -169,13 +173,36 @@ public class GameController : MonoBehaviour
 
         return 10;
     }
+    void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            // Приложение свернуто
+            isPaused = true;
+            pauseTime = DateTime.Now;
+        }
+        else
+        {
+            // Приложение возобновлено
+            isPaused = false;
+            resumeTime = DateTime.Now;
 
+            // Рассчитайте разницу между временем при сворачивании и возобновлении
+            TimeSpan timeDifference = resumeTime - pauseTime;
+
+            // Вычитайте разницу из вашего таймера (или обновите его)
+            timer -= (float)timeDifference.TotalSeconds;
+        }
+    }
     void Timer()
     {
         if (!useTimer) return;
+        
         timer -= Time.deltaTime;
+        
         timer = Math.Clamp(timer, 0, timeToAnswer);
         timerBar.fillAmount = timer / timeToAnswer;
+        
         if (timer <= 0)
         {
             useTimer = false;

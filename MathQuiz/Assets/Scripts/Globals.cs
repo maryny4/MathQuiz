@@ -62,7 +62,10 @@ public class Globals : MonoBehaviour
 
         return bestScore;
     }
+    
 }
+
+
 
 public static class GameAction
 {
