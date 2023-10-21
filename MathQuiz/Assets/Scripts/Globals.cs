@@ -8,11 +8,19 @@ public class Globals : MonoBehaviour
     public RiddleDataList riddleDataList;
     public float transitionDuration = .38f;
     public float transitionDelay = .12f;
-    
+    /// GAME_MODE
     private GAME_MODE currentGameMode;
     public GAME_MODE GetCurrentGameMode => currentGameMode;
     public void SetCurrentGameMode(GAME_MODE gameMode) => currentGameMode = gameMode;
-    
+    /// rangeOfDifficulty
+    private int rangeOfDifficulty;
+    public void SetRangeOfDifficulty(int value)
+    {
+        rangeOfDifficulty = value;
+        PlayerPrefs.SetInt("rangeOfDifficulty", rangeOfDifficulty);
+    }
+    public (int, int) GetRangeOfDifficulty => (-rangeOfDifficulty, rangeOfDifficulty);
+    ///
     private void Awake()
     {
         if (instance != null)
@@ -25,6 +33,7 @@ public class Globals : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
         Application.targetFrameRate = 60;
+        rangeOfDifficulty = PlayerPrefs.GetInt("rangeOfDifficulty", 15);
     }
 
 
