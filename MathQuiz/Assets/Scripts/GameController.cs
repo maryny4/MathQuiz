@@ -20,11 +20,11 @@ public class GameController : MonoBehaviour
     private bool useTimer = true;
     private bool useSecondLife = false;
     private int score;
-    
+
     private bool isPaused = false;
     private DateTime pauseTime;
     private DateTime resumeTime;
-    
+
     private List<string> shuffledCurrentAnswers;
     [SerializeField] private List<string> Answers;
     private Riddle currentRiddle = new Riddle();
@@ -67,7 +67,7 @@ public class GameController : MonoBehaviour
 
     void GenerateRiddle()
     {
-        int MinValue =Globals.instance.NegativeRangeState ? -Globals.instance.GetRangeOfDifficulty : 0 ;
+        int MinValue = Globals.instance.NegativeRangeState ? -Globals.instance.GetRangeOfDifficulty : 0;
         int MaxValue = Globals.instance.GetRangeOfDifficulty;
         int MinValueWithandWithoutBrackets = MinValue;
         int MaxValueWithandWithoutBrackets = MaxValue;
@@ -77,10 +77,10 @@ public class GameController : MonoBehaviour
         const decimal FloatingPointValue2 = 0.25M;
         const decimal FloatingPointValue3 = 0.5M;
         const decimal FloatingPointValue4 = 0.75M;
-        
+
         string riddle = "riddle";
         List<string> answers = new List<string> { "correct", "wrong", "wrong1", "wrong2" };
-        
+
         switch (Globals.instance.GetCurrentGameMode)
         {
             case GAME_MODE.FULL:
@@ -173,6 +173,7 @@ public class GameController : MonoBehaviour
 
         return 10;
     }
+
     void OnApplicationPause(bool pauseStatus)
     {
         if (pauseStatus)
@@ -194,15 +195,16 @@ public class GameController : MonoBehaviour
             timer -= (float)timeDifference.TotalSeconds;
         }
     }
+
     void Timer()
     {
         if (!useTimer) return;
-        
+
         timer -= Time.deltaTime;
-        
+
         timer = Math.Clamp(timer, 0, timeToAnswer);
         timerBar.fillAmount = timer / timeToAnswer;
-        
+
         if (timer <= 0)
         {
             useTimer = false;
