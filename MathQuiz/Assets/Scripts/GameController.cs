@@ -59,65 +59,76 @@ public class GameController : MonoBehaviour
         if (shuffledCurrentAnswers[answerIndex] == currentRiddle.GetAnswers[0]) AnsweredCorrectly();
         else AnsweredWrongly(answerIndex);
     }
-    
+
     void GenerateRiddle()
     {
-        const int MinValue = 1;
-        const int MaxValue = 30;
-        const int MinValueWithandWithoutBrackets = 1;
-        const int MaxValueWithandWithoutBrackets = 15;
-        const int MinRangeResult = 1; ///Диапазон ответов
-        const int MaxRangeResult = 15; ///Диапазон ответов
+        int MinValue = 1;
+        int MaxValue = 30;
+        int MinValueWithandWithoutBrackets = 1;
+        int MaxValueWithandWithoutBrackets = 15;
+        int MinRangeResult = 1; ///Диапазон ответов
+        int MaxRangeResult = 15; ///Диапазон ответов
         const decimal FloatingPointValue1 = 0.1M;
         const decimal FloatingPointValue2 = 0.25M;
         const decimal FloatingPointValue3 = 0.5M;
         const decimal FloatingPointValue4 = 0.75M;
         string riddle = "riddle";
         List<string> answers = new List<string> { "correct", "wrong", "wrong1", "wrong2" };
-        
-        
+
         switch (Globals.instance.GetCurrentGameMode)
-{
-    case GAME_MODE.FULL:
-        (string EndlessMode_example, double EndlessMode_result) = FunctionForGenerator.EndlessMode(MinValue,
-            MaxValue, MinValueWithandWithoutBrackets, MaxValueWithandWithoutBrackets, MinRangeResult,
-            MaxRangeResult, FloatingPointValue1, FloatingPointValue2, FloatingPointValue3, FloatingPointValue4);
-        (List<string> EndlessMode_list, Dictionary<double, List<string>> resultMapping_EndlessMode) = ListForGenerator.GenerateListsAndMappings(EndlessMode_result, MinValue, MaxValue);
-        riddle = EndlessMode_example;
-        answers = EndlessMode_list;
-        break;
-    case GAME_MODE.X_3:
-        (string X_3_example, double X_3_result) = FunctionForGenerator.X_3(MinValueWithandWithoutBrackets,
-            MaxValueWithandWithoutBrackets, MinRangeResult, MaxRangeResult);
-        (List<string> X_3_list, Dictionary<double, List<string>> resultMapping_X_3) = ListForGenerator.GenerateListsAndMappings(X_3_result, MinValue, MaxValue);
-        riddle = X_3_example;
-        answers = X_3_list;
-        break;
-    case GAME_MODE.FIND_X:
-        (string FIND_X_example, double FIND_X_result) = FunctionForGenerator.GenerateEquation_Find_X(MinValue, MaxValue);
-        (List<string> FIND_X_List, Dictionary<double, List<string>> resultMapping_FIND_X_example) = ListForGenerator.GenerateListsAndMappings(FIND_X_result, MinValue, MaxValue);
-        riddle = FIND_X_example;
-        answers = FIND_X_List;
-        break;
-    case GAME_MODE.SUM_AND_SUBTRACT:
-        (string sumAndSubtractExample, double sumAndSubtractResult) = FunctionForGenerator.GenerateSumAndSubtractRiddle(MinValue, MaxValue);
-        (List<string> sumAndSubtractList, Dictionary<double, List<string>> resultMapping_sumAndSubtractExample) = ListForGenerator.GenerateListsAndMappings(sumAndSubtractResult, MinValue, MaxValue);
-        riddle = sumAndSubtractExample;
-        answers = sumAndSubtractList;
-        break;
-    case GAME_MODE.DOUBLE:
-        (string doubleExample, double doubleResult) = FunctionForGenerator.GenerateDoubleRiddle(MinValue, MaxValue);
-        (List<string> doubleList, Dictionary<double, List<string>> resultMappingDouble) = ListForGenerator.GenerateListsAndMappings(doubleResult, MinValue, MaxValue);
-        riddle = doubleExample;
-        answers = doubleList;
-        break;
-    case GAME_MODE.MULTIPLICATION_AND_DIVISION:
-        (string multiplicationAndDivisionExample, double multiplicationAndDivisionResult) = FunctionForGenerator.GenerateMultiplicationAndDivisionRiddle(MinValue, MaxValue);
-        (List<string> multiplicationAndDivisionList, Dictionary<double, List<string>> resultMappingMultiplicationAndDivision) = ListForGenerator.GenerateListsAndMappings(multiplicationAndDivisionResult, MinValue, MaxValue);
-        riddle = multiplicationAndDivisionExample;
-        answers = multiplicationAndDivisionList;
-        break;
-}
+        {
+            case GAME_MODE.FULL:
+                (string EndlessMode_example, double EndlessMode_result) = FunctionForGenerator.EndlessMode(MinValue,
+                    MaxValue, MinValueWithandWithoutBrackets, MaxValueWithandWithoutBrackets, MinRangeResult,
+                    MaxRangeResult, FloatingPointValue1, FloatingPointValue2, FloatingPointValue3, FloatingPointValue4);
+                (List<string> EndlessMode_list, Dictionary<double, List<string>> resultMapping_EndlessMode) =
+                    ListForGenerator.GenerateListsAndMappings(EndlessMode_result, MinValue, MaxValue);
+                riddle = EndlessMode_example;
+                answers = EndlessMode_list;
+                break;
+            case GAME_MODE.X_3:
+                (string X_3_example, double X_3_result) = FunctionForGenerator.X_3(MinValueWithandWithoutBrackets,
+                    MaxValueWithandWithoutBrackets, MinRangeResult, MaxRangeResult);
+                (List<string> X_3_list, Dictionary<double, List<string>> resultMapping_X_3) =
+                    ListForGenerator.GenerateListsAndMappings(X_3_result, MinValue, MaxValue);
+                riddle = X_3_example;
+                answers = X_3_list;
+                break;
+            case GAME_MODE.FIND_X:
+                (string FIND_X_example, double FIND_X_result) =
+                    FunctionForGenerator.GenerateEquation_Find_X(MinValue, MaxValue);
+                (List<string> FIND_X_List, Dictionary<double, List<string>> resultMapping_FIND_X_example) =
+                    ListForGenerator.GenerateListsAndMappings(FIND_X_result, MinValue, MaxValue);
+                riddle = FIND_X_example;
+                answers = FIND_X_List;
+                break;
+            case GAME_MODE.SUM_AND_SUBTRACT:
+                (string sumAndSubtractExample, double sumAndSubtractResult) =
+                    FunctionForGenerator.GenerateSumAndSubtractRiddle(MinValue, MaxValue);
+                (List<string> sumAndSubtractList,
+                        Dictionary<double, List<string>> resultMapping_sumAndSubtractExample) =
+                    ListForGenerator.GenerateListsAndMappings(sumAndSubtractResult, MinValue, MaxValue);
+                riddle = sumAndSubtractExample;
+                answers = sumAndSubtractList;
+                break;
+            case GAME_MODE.DOUBLE:
+                (string doubleExample, double doubleResult) =
+                    FunctionForGenerator.GenerateDoubleRiddle(MinValue, MaxValue);
+                (List<string> doubleList, Dictionary<double, List<string>> resultMappingDouble) =
+                    ListForGenerator.GenerateListsAndMappings(doubleResult, MinValue, MaxValue);
+                riddle = doubleExample;
+                answers = doubleList;
+                break;
+            case GAME_MODE.MULTIPLICATION_AND_DIVISION:
+                (string multiplicationAndDivisionExample, double multiplicationAndDivisionResult) =
+                    FunctionForGenerator.GenerateMultiplicationAndDivisionRiddle(MinValue, MaxValue);
+                (List<string> multiplicationAndDivisionList,
+                        Dictionary<double, List<string>> resultMappingMultiplicationAndDivision) =
+                    ListForGenerator.GenerateListsAndMappings(multiplicationAndDivisionResult, MinValue, MaxValue);
+                riddle = multiplicationAndDivisionExample;
+                answers = multiplicationAndDivisionList;
+                break;
+        }
 
 
         riddle = riddle.Replace('/', '÷');
