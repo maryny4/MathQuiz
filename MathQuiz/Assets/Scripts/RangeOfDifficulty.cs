@@ -5,22 +5,42 @@ using UnityEngine.UI;
 public class RangeOfDifficulty : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI rangeText;
-    private Slider slider;
+    [SerializeField] private Slider slider;
+    [SerializeField] private Button negativeButton;
+    [SerializeField] private TextMeshProUGUI negativeButtonText;
     private int minValue = 15;
     private int maxValue = 100;
+    private int currentRange;
 
     private void Start()
     {
-        slider = GetComponent<Slider>();
-        slider.onValueChanged.AddListener(delegate { OnValueChanged(); });
+        slider.onValueChanged.AddListener(delegate { SliderUpdate(); });
         slider.value = Mathf.InverseLerp(minValue, maxValue, Globals.instance.GetRangeOfDifficulty);
-        OnValueChanged();
+        SliderUpdate();
+        
+        negativeButton.onClick.AddListener(() => SwitchNegativeNumbers());
+        negativeButtonText.text = RangeTypeText();
     }
-    void OnValueChanged()
+    void SliderUpdate()
     {
         float normalizedValue = slider.value;
-        int newRange = (int)Mathf.Lerp(minValue, maxValue, normalizedValue);
-        Globals.instance.SetRangeOfDifficulty(newRange);
-        rangeText.text = (-newRange).ToString() + " / " + newRange.ToString();
+        currentRange = (int)Mathf.Lerp(minValue, maxValue , normalizedValue);
+        Globals.instance.SetRangeOfDifficulty(currentRange);
+        rangeText.text = RangeText();
     }
+
+    void SwitchNegativeNumbers()
+    {
+        SoundController.instance.PlayButtonClickSound();
+        Globals.instance.NegativeRangeSwitcher();
+        StartCoroutine(TextUpdater.UpdateText(negativeButtonText, RangeTypeText()));
+        StartCoroutine(TextUpdater.UpdateText(rangeText, RangeText()));
+    }
+
+    private string RangeText() 
+    {
+        return Globals.instance.NegativeRangeState ? (-currentRange + " / " + currentRange) : ("0 / " + currentRange);
+    }
+
+    private string RangeTypeText() => Globals.instance.NegativeRangeState ? "-X / X" : "X";
 }

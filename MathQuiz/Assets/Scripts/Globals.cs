@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 public class Globals : MonoBehaviour
 {
@@ -20,7 +21,18 @@ public class Globals : MonoBehaviour
         PlayerPrefs.SetInt("rangeOfDifficulty", rangeOfDifficulty);
     }
     public int GetRangeOfDifficulty => rangeOfDifficulty;
-    ///
+
+    ///negative range
+    private bool negativeRange;
+
+    public void NegativeRangeSwitcher()
+    {
+        negativeRange = !negativeRange;
+        PlayerPrefs.SetInt("NEGATIVE_RANGE", negativeRange ? 1 : 0);
+    }
+    public bool NegativeRangeState => negativeRange;
+
+    
     private void Awake()
     {
         if (instance != null)
@@ -34,6 +46,7 @@ public class Globals : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         Application.targetFrameRate = 60;
         rangeOfDifficulty = PlayerPrefs.GetInt("rangeOfDifficulty", 15);
+        negativeRange = PlayerPrefs.GetInt("NEGATIVE_RANGE") == 1;
     }
 
 
