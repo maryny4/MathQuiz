@@ -60,21 +60,23 @@ public class GameController : MonoBehaviour
         else AnsweredWrongly(answerIndex);
     }
 
+
     void GenerateRiddle()
     {
-        int MinValue = 1;
-        int MaxValue = 30;
-        int MinValueWithandWithoutBrackets = 1;
-        int MaxValueWithandWithoutBrackets = 15;
-        int MinRangeResult = 1; ///Диапазон ответов
-        int MaxRangeResult = 15; ///Диапазон ответов
+        int MinValue =Globals.instance.NegativeRangeState ? -Globals.instance.GetRangeOfDifficulty : 0 ;
+        int MaxValue = Globals.instance.GetRangeOfDifficulty;
+        int MinValueWithandWithoutBrackets = MinValue;
+        int MaxValueWithandWithoutBrackets = MaxValue;
+        int MinRangeResult = MinValue;
+        int MaxRangeResult = MaxValue;
         const decimal FloatingPointValue1 = 0.1M;
         const decimal FloatingPointValue2 = 0.25M;
         const decimal FloatingPointValue3 = 0.5M;
         const decimal FloatingPointValue4 = 0.75M;
+        
         string riddle = "riddle";
         List<string> answers = new List<string> { "correct", "wrong", "wrong1", "wrong2" };
-
+        
         switch (Globals.instance.GetCurrentGameMode)
         {
             case GAME_MODE.FULL:

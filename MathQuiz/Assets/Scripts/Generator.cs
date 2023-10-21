@@ -420,22 +420,26 @@ public static class FunctionForGenerator
         switch (randomChoice)
         {
             case 1:
-                example = FloatingPointExpressionGenerator.GenerateRandomExampleForFloatingPoint(0.1M, minDouble, maxDouble);
+                example = FloatingPointExpressionGenerator.GenerateRandomExampleForFloatingPoint(0.1M, minDouble,
+                    maxDouble);
                 result = 0.1;
                 break;
 
             case 2:
-                example = FloatingPointExpressionGenerator.GenerateRandomExampleForFloatingPoint(0.25M, minDouble, maxDouble);
+                example = FloatingPointExpressionGenerator.GenerateRandomExampleForFloatingPoint(0.25M, minDouble,
+                    maxDouble);
                 result = 0.25;
                 break;
 
             case 3:
-                example = FloatingPointExpressionGenerator.GenerateRandomExampleForFloatingPoint(0.5M, minDouble, maxDouble);
+                example = FloatingPointExpressionGenerator.GenerateRandomExampleForFloatingPoint(0.5M, minDouble,
+                    maxDouble);
                 result = 0.5;
                 break;
 
             case 4:
-                example = FloatingPointExpressionGenerator.GenerateRandomExampleForFloatingPoint(0.75M, minDouble, maxDouble);
+                example = FloatingPointExpressionGenerator.GenerateRandomExampleForFloatingPoint(0.75M, minDouble,
+                    maxDouble);
                 result = 0.75;
                 break;
         }
@@ -454,21 +458,36 @@ public static class FunctionForGenerator
         return (example, result);
     }
 }
+
 public static class ListForGenerator
 {
     static double result1 = 0.1;
     static double result2 = 0.25;
     static double result3 = 0.5;
     static double result4 = 0.75;
-    public static (List<string> list, Dictionary<double, List<string>> resultMapping) GenerateListsAndMappings(double result, double minValue, double maxValue)
+
+    public static (List<string> list, Dictionary<double, List<string>> resultMapping) GenerateListsAndMappings(
+        double result, double minValue, double maxValue)
     {
         List<string> list = new List<string>();
         Dictionary<double, List<string>> resultMapping = new Dictionary<double, List<string>>
         {
-            { result1, new List<string> { result1.ToString(), result2.ToString(), result3.ToString(), result4.ToString() } },
-            { result2, new List<string> { result2.ToString(), result1.ToString(), result3.ToString(), result4.ToString() } },
-            { result3, new List<string> { result3.ToString(), result1.ToString(), result2.ToString(), result4.ToString() } },
-            { result4, new List<string> { result4.ToString(), result1.ToString(), result2.ToString(), result3.ToString() } }
+            {
+                result1,
+                new List<string> { result1.ToString(), result2.ToString(), result3.ToString(), result4.ToString() }
+            },
+            {
+                result2,
+                new List<string> { result2.ToString(), result1.ToString(), result3.ToString(), result4.ToString() }
+            },
+            {
+                result3,
+                new List<string> { result3.ToString(), result1.ToString(), result2.ToString(), result4.ToString() }
+            },
+            {
+                result4,
+                new List<string> { result4.ToString(), result1.ToString(), result2.ToString(), result3.ToString() }
+            }
         };
 
         if (resultMapping.ContainsKey(result))
@@ -496,4 +515,3 @@ public static class ListForGenerator
         return (list, resultMapping);
     }
 }
-
