@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class AdditionSubtractionExpressionGenerator
 {
@@ -514,4 +515,36 @@ public static class ListForGenerator
 
         return (list, resultMapping);
     }
+}
+
+public static class Checkingbrackets
+{
+    public static string CheckingbracketsProcess(string input)
+    {
+        // Разделяем строку на отдельные элементы
+        string[] elements = input.Split(' ');
+
+        // Обработка чисел с минусом
+        string pattern = @"(-\d+)";
+        for (int i = 0; i < elements.Length; i++)
+        {
+            if (Regex.IsMatch(elements[i], pattern))
+            {
+                elements[i] = $"({elements[i]})"; // Добавляем скобки
+            }
+        }
+
+        // Склеиваем элементы обратно в строку
+        string result = string.Join(" ", elements);
+
+        return result;
+    }
+
+
+
+
+
+
+
+    
 }

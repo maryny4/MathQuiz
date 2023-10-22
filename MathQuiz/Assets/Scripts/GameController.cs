@@ -91,7 +91,7 @@ public class GameController : MonoBehaviour
                     MaxRangeResult, FloatingPointValue1, FloatingPointValue2, FloatingPointValue3, FloatingPointValue4);
                 (List<string> EndlessMode_list, Dictionary<double, List<string>> resultMapping_EndlessMode) =
                     ListForGenerator.GenerateListsAndMappings(EndlessMode_result, MinValue, MaxValue);
-                riddle = EndlessMode_example;
+                riddle = Checkingbrackets.CheckingbracketsProcess(EndlessMode_example);
                 answers = EndlessMode_list;
                 break;
             case GAME_MODE.X_3:
@@ -99,7 +99,7 @@ public class GameController : MonoBehaviour
                     MaxValueWithandWithoutBrackets, MinRangeResult, MaxRangeResult);
                 (List<string> X_3_list, Dictionary<double, List<string>> resultMapping_X_3) =
                     ListForGenerator.GenerateListsAndMappings(X_3_result, MinValue, MaxValue);
-                riddle = X_3_example;
+                riddle = Checkingbrackets.CheckingbracketsProcess(X_3_example);
                 answers = X_3_list;
                 break;
             case GAME_MODE.FIND_X:
@@ -107,7 +107,7 @@ public class GameController : MonoBehaviour
                     FunctionForGenerator.GenerateEquation_Find_X(MinValue, MaxValue);
                 (List<string> FIND_X_List, Dictionary<double, List<string>> resultMapping_FIND_X_example) =
                     ListForGenerator.GenerateListsAndMappings(FIND_X_result, MinValue, MaxValue);
-                riddle = FIND_X_example;
+                riddle = Checkingbrackets.CheckingbracketsProcess(FIND_X_example);
                 answers = FIND_X_List;
                 break;
             case GAME_MODE.SUM_AND_SUBTRACT:
@@ -116,7 +116,8 @@ public class GameController : MonoBehaviour
                 (List<string> sumAndSubtractList,
                         Dictionary<double, List<string>> resultMapping_sumAndSubtractExample) =
                     ListForGenerator.GenerateListsAndMappings(sumAndSubtractResult, MinValue, MaxValue);
-                riddle = sumAndSubtractExample;
+                
+                riddle = Checkingbrackets.CheckingbracketsProcess(sumAndSubtractExample);
                 answers = sumAndSubtractList;
                 break;
             case GAME_MODE.DOUBLE:
@@ -133,7 +134,7 @@ public class GameController : MonoBehaviour
                 (List<string> multiplicationAndDivisionList,
                         Dictionary<double, List<string>> resultMappingMultiplicationAndDivision) =
                     ListForGenerator.GenerateListsAndMappings(multiplicationAndDivisionResult, MinValue, MaxValue);
-                riddle = multiplicationAndDivisionExample;
+                riddle = Checkingbrackets.CheckingbracketsProcess(multiplicationAndDivisionExample);
                 answers = multiplicationAndDivisionList;
                 break;
         }
