@@ -9,6 +9,8 @@ public class Globals : MonoBehaviour
     public RiddleDataList riddleDataList;
     public float transitionDuration = .38f;
     public float transitionDelay = .12f;
+
+    private int RewardCoins;
     /// GAME_MODE
     private GAME_MODE currentGameMode;
     public GAME_MODE GetCurrentGameMode => currentGameMode;
@@ -48,7 +50,31 @@ public class Globals : MonoBehaviour
         rangeOfDifficulty = PlayerPrefs.GetInt("rangeOfDifficulty", 15);
         negativeRange = PlayerPrefs.GetInt("NEGATIVE_RANGE") == 1;
     }
+    
+    /// <param name="coinsToAdd"></param>
+    public void AddCoins(int coinsToAdd)
+    {
+        int currentCoins = PlayerPrefs.GetInt("COINS", 0); // Получаем текущее количество монет
+        currentCoins += coinsToAdd; // Увеличиваем монеты на coinsToAdd
+        PlayerPrefs.SetInt("COINS", currentCoins); // Сохраняем обновленное значение в PlayerPrefs
+        UpdateCoinsDisplay(); // Вызываем функцию для обновления отображения монет в интерфейсе (если есть)
+        Debug.Log("Total Coins: " + currentCoins); // Можно вывести в лог для отладки
 
+        RewardCoins = coinsToAdd;
+    }
+    
+    [ContextMenu("X_2adb")]
+    public void X_2adb()
+    {
+        AddCoins(RewardCoins);
+    }
+
+    public void UpdateCoinsDisplay()
+    {
+        int totalCoins = PlayerPrefs.GetInt("COINS", 0);
+        Debug.Log("Total Coins: " + totalCoins);
+    }
+    ///
 
     public int GetBestScore(int score)
     {

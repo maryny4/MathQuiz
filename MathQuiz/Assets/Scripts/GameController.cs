@@ -20,10 +20,11 @@ public class GameController : MonoBehaviour
     private bool useTimer = true;
     private bool useSecondLife = false;
     private int score;
-
     private bool isPaused = false;
     private DateTime pauseTime;
     private DateTime resumeTime;
+    private int tempScore;
+
 
     private List<string> shuffledCurrentAnswers;
     [SerializeField] private List<string> Answers;
@@ -33,6 +34,7 @@ public class GameController : MonoBehaviour
     {
         GameAction.onClickAnswer += CheckAnswer;
         GameAction.startGame += StartGame;
+        
         StartGame();
     }
 
@@ -159,11 +161,18 @@ public class GameController : MonoBehaviour
     void AnsweredWrongly(int wrongAnswer)
     {
         Debug.Log("AnsweredWrongly");
+        int totalCoinsBefore = PlayerPrefs.GetInt("COINS", 0); // Записываем текущее значение монеток
+        Debug.Log("Total Coins Before: " + totalCoinsBefore);
+        totalCoinsBefore += score; // Добавьте временные очки к общим очкам
+        Globals.instance.AddCoins(score);
+        Debug.Log("Total Coins After: " + totalCoinsBefore); // Отобразите новое значение монеток
         answersCanvasGroup.interactable = false;
         GameAction.setButtonsColor(FindCorrecAnswer(), wrongAnswer);
         useTimer = false;
         gameOverPanel.ShowPanelWithDelay(score, "WRONG ANSWER");
+        Debug.Log("time has passed");
     }
+
 
     int FindCorrecAnswer()
     {
