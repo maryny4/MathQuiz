@@ -157,21 +157,17 @@ public class GameController : MonoBehaviour
     
         // Добавляем монету только в случае верного ответа и быстрее 5 секунд
         float timeSpent = timeToAnswer - timer;
+        int coinsToAdd = 0;
         if (timeSpent < 5.0f)
         {
-            int totalCoinsBefore = PlayerPrefs.GetInt("COINS", 0); // Записываем текущее значение монеток
-            totalCoinsBefore += 2; // Добавляем 1 монету
-            PlayerPrefs.SetInt("COINS", totalCoinsBefore); // Сохраняем новое значение монеток
-            Debug.Log("Total Coins After: " + totalCoinsBefore); // Отображаем новое значение монеток
+            coinsToAdd = 2;
         }
         else
         {
-            int totalCoinsBefore = PlayerPrefs.GetInt("COINS", 0); // Записываем текущее значение монеток
-            totalCoinsBefore += 1; // Добавляем 1 монету
-            PlayerPrefs.SetInt("COINS", totalCoinsBefore); // Сохраняем новое значение монеток
-            Debug.Log("Total Coins After: " + totalCoinsBefore); // Отображаем новое значение монеток
+            coinsToAdd = 1;
         }
-
+        Globals.instance.AddCoins(coinsToAdd);
+        
         StartCoroutine(TextUpdater.UpdateText(scoreText, score.ToString()));
         ResetTimer();
         GenerateRiddle();
