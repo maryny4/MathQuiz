@@ -666,7 +666,9 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   webGLPowerPreference: 2
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: gameanalytics_admob_enabled
+    iPhone: gameanalytics_admob_enabled
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
