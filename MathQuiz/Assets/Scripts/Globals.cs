@@ -59,12 +59,11 @@ public class Globals : MonoBehaviour
         PlayerPrefs.SetInt("COINS", currentCoins); // Сохраняем обновленное значение в PlayerPrefs
         UpdateCoinsDisplay(); // Вызываем функцию для обновления отображения монет в интерфейсе (если есть)
         Debug.Log("Total Coins: " + currentCoins); // Можно вывести в лог для отладки
-
         RewardCoins = coinsToAdd;
     }
     
     [ContextMenu("X_2adb")]
-    public void X_2adb()
+    public void X2_Coin()
     {
         AddCoins(RewardCoins);
     }
@@ -92,7 +91,6 @@ public class Globals : MonoBehaviour
 }
 
 
-
 public static class GameAction
 {
     public static Action<int> onClickAnswer;
@@ -102,6 +100,9 @@ public static class GameAction
     public static Action timeIsOver;
     public static Action<bool> startGame;
     public static Action<bool> soundEnable;
+    public static Action<HINT_TYPE> useHint;
+    public static Action<int, int> disableHalfAnswers;
+    public static Action<int> showCorrectAnswer;
 }
 
 public enum GAME_MODE
@@ -112,4 +113,11 @@ public enum GAME_MODE
     X_3,
     SUM_AND_SUBTRACT,
     MULTIPLICATION_AND_DIVISION,
+}
+
+public enum HINT_TYPE
+{
+    FULL_HINT,
+    NEW_ANSWER,
+    FIFTY_FIFTY
 }

@@ -34,6 +34,7 @@ public class GameController : MonoBehaviour
     {
         GameAction.onClickAnswer += CheckAnswer;
         GameAction.startGame += StartGame;
+        GameAction.useHint += UseHint;
         
         StartGame();
     }
@@ -42,6 +43,7 @@ public class GameController : MonoBehaviour
     {
         GameAction.onClickAnswer -= CheckAnswer;
         GameAction.startGame -= StartGame;
+        GameAction.useHint -= UseHint;
     }
 
     private void Update()
@@ -238,5 +240,37 @@ public class GameController : MonoBehaviour
     {
         useTimer = true;
         timer = timeToAnswer;
+    }
+    
+    void UseHint(HINT_TYPE hintType)
+    {
+        switch (hintType)
+        {
+            case HINT_TYPE.FULL_HINT:
+
+                GameAction.showCorrectAnswer(FindCorrecAnswer());
+                break;
+            case HINT_TYPE.NEW_ANSWER:
+                
+                StartGame(false);
+                break;
+            case HINT_TYPE.FIFTY_FIFTY:
+                
+                int correctAnswer = FindCorrecAnswer();
+                int randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                int randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                
+                while (correctAnswer == randomWrongAnswer1)
+                {
+                    randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                }
+                while (correctAnswer == randomWrongAnswer2 || randomWrongAnswer1 == randomWrongAnswer2)
+                {
+                    randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                }
+                
+                GameAction.disableHalfAnswers?.Invoke(randomWrongAnswer1, randomWrongAnswer2);
+                break;
+        }
     }
 }

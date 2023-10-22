@@ -140,6 +140,7 @@ MonoBehaviour:
   defaultColor: {r: 0.44705886, g: 0.8000001, b: 0.9568628, a: 1}
   correctColor: {r: 0.5058824, g: 0.7372549, b: 0.2627451, a: 1}
   wrongColor: {r: 0.9294118, g: 0.43137258, b: 0.18823531, a: 1}
+  disabledColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 0.69803923}
 --- !u!114 &5048428651136345864
 MonoBehaviour:
   m_ObjectHideFlags: 0
