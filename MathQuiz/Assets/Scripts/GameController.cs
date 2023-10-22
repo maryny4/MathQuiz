@@ -154,6 +154,24 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("AnsweredCorrectly");
         score++;
+    
+        // Добавляем монету только в случае верного ответа и быстрее 5 секунд
+        float timeSpent = timeToAnswer - timer;
+        if (timeSpent < 5.0f)
+        {
+            int totalCoinsBefore = PlayerPrefs.GetInt("COINS", 0); // Записываем текущее значение монеток
+            totalCoinsBefore += 2; // Добавляем 1 монету
+            PlayerPrefs.SetInt("COINS", totalCoinsBefore); // Сохраняем новое значение монеток
+            Debug.Log("Total Coins After: " + totalCoinsBefore); // Отображаем новое значение монеток
+        }
+        else
+        {
+            int totalCoinsBefore = PlayerPrefs.GetInt("COINS", 0); // Записываем текущее значение монеток
+            totalCoinsBefore += 1; // Добавляем 1 монету
+            PlayerPrefs.SetInt("COINS", totalCoinsBefore); // Сохраняем новое значение монеток
+            Debug.Log("Total Coins After: " + totalCoinsBefore); // Отображаем новое значение монеток
+        }
+
         StartCoroutine(TextUpdater.UpdateText(scoreText, score.ToString()));
         ResetTimer();
         GenerateRiddle();
@@ -162,11 +180,6 @@ public class GameController : MonoBehaviour
     void AnsweredWrongly(int wrongAnswer)
     {
         Debug.Log("AnsweredWrongly");
-        int totalCoinsBefore = PlayerPrefs.GetInt("COINS", 0); // Записываем текущее значение монеток
-        Debug.Log("Total Coins Before: " + totalCoinsBefore);
-        totalCoinsBefore += score; // Добавьте временные очки к общим очкам
-        Globals.instance.AddCoins(score);
-        Debug.Log("Total Coins After: " + totalCoinsBefore); // Отобразите новое значение монеток
         answersCanvasGroup.interactable = false;
         GameAction.setButtonsColor(FindCorrecAnswer(), wrongAnswer);
         useTimer = false;
