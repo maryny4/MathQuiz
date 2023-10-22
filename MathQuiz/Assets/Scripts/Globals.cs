@@ -58,7 +58,6 @@ public class Globals : MonoBehaviour
         currentCoins += coinsToAdd; // Увеличиваем монеты на coinsToAdd
         PlayerPrefs.SetInt("COINS", currentCoins); // Сохраняем обновленное значение в PlayerPrefs
         UpdateCoinsDisplay(); // Вызываем функцию для обновления отображения монет в интерфейсе (если есть)
-        Debug.Log("Total Coins: " + currentCoins); // Можно вывести в лог для отладки
         RewardCoins = coinsToAdd;
     }
     
@@ -71,7 +70,6 @@ public class Globals : MonoBehaviour
     public void UpdateCoinsDisplay()
     {
         int totalCoins = PlayerPrefs.GetInt("COINS", 0);
-        Debug.Log("Total Coins: " + totalCoins);
     }
     ///
 

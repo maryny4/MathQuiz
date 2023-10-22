@@ -32,10 +32,12 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        //PlayerPrefs.SetInt("COINS", 500);
+        //PlayerPrefs.Save();
         GameAction.onClickAnswer += CheckAnswer;
         GameAction.startGame += StartGame;
         GameAction.useHint += UseHint;
-        
+
         StartGame();
     }
 
@@ -118,7 +120,7 @@ public class GameController : MonoBehaviour
                 (List<string> sumAndSubtractList,
                         Dictionary<double, List<string>> resultMapping_sumAndSubtractExample) =
                     ListForGenerator.GenerateListsAndMappings(sumAndSubtractResult, MinValue, MaxValue);
-                
+
                 riddle = Checkingbrackets.CheckingbracketsProcess(sumAndSubtractExample);
                 answers = sumAndSubtractList;
                 break;
@@ -156,7 +158,7 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("AnsweredCorrectly");
         score++;
-    
+
         // Добавляем монету только в случае верного ответа и быстрее 5 секунд
         float timeSpent = timeToAnswer - timer;
         int coinsToAdd = 0;
@@ -168,8 +170,9 @@ public class GameController : MonoBehaviour
         {
             coinsToAdd = 1;
         }
+
         Globals.instance.AddCoins(coinsToAdd);
-        
+
         StartCoroutine(TextUpdater.UpdateText(scoreText, score.ToString()));
         ResetTimer();
         GenerateRiddle();
@@ -241,36 +244,68 @@ public class GameController : MonoBehaviour
         useTimer = true;
         timer = timeToAnswer;
     }
-    
+
     void UseHint(HINT_TYPE hintType)
     {
+        int totalCoins = PlayerPrefs.GetInt("COINS", 0);
+        int hintCost = 0;
+
         switch (hintType)
         {
             case HINT_TYPE.FULL_HINT:
-
-                GameAction.showCorrectAnswer(FindCorrecAnswer());
+                hintCost = 25;
                 break;
             case HINT_TYPE.NEW_ANSWER:
-                
-                StartGame(false);
+                hintCost = 5;
                 break;
             case HINT_TYPE.FIFTY_FIFTY:
-                
-                int correctAnswer = FindCorrecAnswer();
-                int randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
-                int randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
-                
-                while (correctAnswer == randomWrongAnswer1)
-                {
-                    randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
-                }
-                while (correctAnswer == randomWrongAnswer2 || randomWrongAnswer1 == randomWrongAnswer2)
-                {
-                    randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
-                }
-                
-                GameAction.disableHalfAnswers?.Invoke(randomWrongAnswer1, randomWrongAnswer2);
+                hintCost = 15;
                 break;
+        }
+
+        if (hintCost > 0)
+        {
+            if (totalCoins >= hintCost)
+            {
+                // Выполнить подсказку в соответствии с ее типом
+                switch (hintType)
+                {
+                    case HINT_TYPE.FULL_HINT:
+                        GameAction.showCorrectAnswer(FindCorrecAnswer());
+                        break;
+                    case HINT_TYPE.NEW_ANSWER:
+                        StartGame(false);
+                        break;
+                    case HINT_TYPE.FIFTY_FIFTY:
+
+                        int correctAnswer = FindCorrecAnswer();
+                        int randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                        int randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+
+                        while (correctAnswer == randomWrongAnswer1)
+                        {
+                            randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                        }
+
+                        while (correctAnswer == randomWrongAnswer2 || randomWrongAnswer1 == randomWrongAnswer2)
+                        {
+                            randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                        }
+
+                        GameAction.disableHalfAnswers?.Invoke(randomWrongAnswer1, randomWrongAnswer2);
+                        break;
+                }
+
+                // Вычесть стоимость подсказки из монет
+                Globals.instance.AddCoins(-hintCost);
+                Debug.Log($"Hint used. Cost: {hintCost} coins. Remaining coins: {totalCoins}");
+                Debug.Log("Total Coins: " + totalCoins);
+            }
+            else
+            {
+                Debug.Log("Not enough coins for this hint.");
+                Debug.Log("Total Coins: " + totalCoins);
+            }
         }
     }
 }
