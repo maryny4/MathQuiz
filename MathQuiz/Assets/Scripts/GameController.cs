@@ -189,7 +189,7 @@ public class GameController : MonoBehaviour
 
     bool CanShowAd(int score, int consecutiveLosses)
     {
-        if (score >= 20)
+        if (score >= 15)
         {
             Debug.Log("Показываем рекламу, потому что счет больше 20, Прошло менее минуты с последнего показа рекламы");
             consecutiveLosses = 0;
