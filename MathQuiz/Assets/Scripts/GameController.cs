@@ -188,12 +188,20 @@ public class GameController : MonoBehaviour
     private float lastAdTime = 0f;
     bool CanShowAd(int score, int timer, int consecutiveLosses)
     {
+        if (score >= 20)
+        {
+            Debug.Log("Показываем рекламу, потому что счет больше 20, Прошло менее минуты с последнего показа рекламы");
+            consecutiveLosses = 0;
+            lastAdTime = Time.time;
+            
+            return true;
+        }
         if (Time.time - lastAdTime < 60f)
         {
             return false; // еще не прошла минута
         }
         // Проверяем, прошла ли минута с последнего показа рекламы
-        if (consecutiveLosses >= 3 && score > 1)
+        if (consecutiveLosses >= 3 && score >= 1)
         {
             // Показываем рекламу и сбрасываем счетчик
             Debug.Log("Показываем рекламу, потому что проиграно больше 3 раз подряд со счетом больше 1, Прошло более минуты с последнего показа рекламы");
@@ -201,14 +209,7 @@ public class GameController : MonoBehaviour
             lastAdTime = Time.time;
             return true;
         }
-        if (score >= 20)
-        {
-            Debug.Log("Показываем рекламу, потому что счет больше 20, Прошло более минуты с последнего показа рекламы");
-            consecutiveLosses = 0;
-            lastAdTime = Time.time;
-            
-            return true;
-        }
+        
         return false;
     }
     void AnsweredWrongly(int wrongAnswer)
