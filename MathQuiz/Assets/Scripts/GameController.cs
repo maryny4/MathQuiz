@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameOverPanel gameOverPanel;
     [SerializeField] private TextMeshProUGUI riddleText;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI coinsText;
     [SerializeField] private Image timerBar;
     [SerializeField] private CanvasGroup answersCanvasGroup;
 
@@ -58,6 +59,7 @@ public class GameController : MonoBehaviour
     {
         answersCanvasGroup.interactable = true;
         if (clearScore) score = 0;
+        StartCoroutine(TextUpdater.UpdateText(coinsText, PlayerPrefs.GetInt("COINS", 0).ToString()));
         StartCoroutine(TextUpdater.UpdateText(scoreText, score.ToString()));
         useTimer = true;
         useSecondLife = false;
@@ -315,6 +317,7 @@ public class GameController : MonoBehaviour
         {
             case HINT_TYPE.FULL_HINT:
                 hintCost = 25;
+                
                 break;
             case HINT_TYPE.FIFTY_FIFTY:
                 hintCost = 15;
@@ -336,6 +339,7 @@ public class GameController : MonoBehaviour
         {
             case HINT_TYPE.FULL_HINT:
                 fullHintUsed = 1;
+                fiftyFiftyUsed = 2;
                 GameAction.showCorrectAnswer(FindCorrecAnswer());
                 break;
             case HINT_TYPE.FIFTY_FIFTY:
@@ -365,5 +369,6 @@ public class GameController : MonoBehaviour
         totalCoins -= hintCost;
         PlayerPrefs.SetInt("COINS", totalCoins);
         Debug.Log($"Hint used. Cost: {hintCost} coins. Remaining coins: {totalCoins}");
+        StartCoroutine(TextUpdater.UpdateText(coinsText, totalCoins.ToString()));
     }
 }

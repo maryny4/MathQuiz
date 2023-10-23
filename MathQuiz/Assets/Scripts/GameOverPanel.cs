@@ -10,7 +10,7 @@ public class GameOverPanel : PageAnimation
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button backToMenuButton;
-
+    [SerializeField] private TextMeshProUGUI coinsText;
     private void Start()
     {
         restartButton.onClick.AddListener(() => RestartGame());
