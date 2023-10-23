@@ -34,8 +34,6 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        PlayerPrefs.SetInt("COINS", 500);
-        PlayerPrefs.Save();
         GameAction.onClickAnswer += CheckAnswer;
         GameAction.startGame += StartGame;
         GameAction.useHint += UseHint;
@@ -57,6 +55,7 @@ public class GameController : MonoBehaviour
 
     private void StartGame(bool clearScore = true)
     {
+        Globals.instance.RewardCoins = 0;
         answersCanvasGroup.interactable = true;
         if (clearScore) score = 0;
         StartCoroutine(TextUpdater.UpdateText(coinsText, PlayerPrefs.GetInt("COINS", 0).ToString()));

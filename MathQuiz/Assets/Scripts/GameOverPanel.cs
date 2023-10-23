@@ -8,8 +8,10 @@ public class GameOverPanel : PageAnimation
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI bestScoreText;
     [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private TextMeshProUGUI rewardCoinCountText;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button backToMenuButton;
+    [SerializeField] private Button _2xRewardButton;
     [SerializeField] private TextMeshProUGUI coinsText;
     private void Start()
     {
@@ -30,7 +32,15 @@ public class GameOverPanel : PageAnimation
         titleText.text = title;
         scoreText.text = "SCORE: " + score;
         bestScoreText.text = "BEST SCORE: " + bestScore;
+        rewardCoinCountText.text = "+" + Globals.instance.RewardCoins;
+        _2xRewardButton.gameObject.SetActive(Globals.instance.RewardCoins > 0);
         base.ShowPanel();
+    }
+
+    public void Used_2x_Reward()
+    {
+        _2xRewardButton.gameObject.SetActive(false);
+        rewardCoinCountText.text = "+" + Globals.instance.RewardCoins;
     }
 
     void RestartGame()

@@ -10,7 +10,7 @@ public class Globals : MonoBehaviour
     public float transitionDuration = .38f;
     public float transitionDelay = .12f;
 
-    private int RewardCoins;
+    [HideInInspector]public int RewardCoins;
     /// GAME_MODE
     private GAME_MODE currentGameMode;
     public GAME_MODE GetCurrentGameMode => currentGameMode;
@@ -58,12 +58,13 @@ public class Globals : MonoBehaviour
         currentCoins += coinsToAdd; // Увеличиваем монеты на coinsToAdd
         PlayerPrefs.SetInt("COINS", currentCoins); // Сохраняем обновленное значение в PlayerPrefs
         UpdateCoinsDisplay(); // Вызываем функцию для обновления отображения монет в интерфейсе (если есть)
-        RewardCoins = coinsToAdd;
+        RewardCoins += coinsToAdd;
     }
-    
+
     [ContextMenu("X_2adb")]
     public void X2_Coin()
     {
+        Debug.Log("X2_COINS " + RewardCoins);
         AddCoins(RewardCoins);
     }
 
