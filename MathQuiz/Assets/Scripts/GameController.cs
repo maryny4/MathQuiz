@@ -24,7 +24,8 @@ public class GameController : MonoBehaviour
     private DateTime pauseTime;
     private DateTime resumeTime;
     private int tempScore;
-
+    private int fullHintUsed = 0;
+    private int fiftyFiftyUsed = 0;
 
     private List<string> shuffledCurrentAnswers;
     [SerializeField] private List<string> Answers;
@@ -32,8 +33,8 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        //PlayerPrefs.SetInt("COINS", 500);
-        //PlayerPrefs.Save();
+        PlayerPrefs.SetInt("COINS", 500);
+        PlayerPrefs.Save();
         GameAction.onClickAnswer += CheckAnswer;
         GameAction.startGame += StartGame;
         GameAction.useHint += UseHint;
@@ -55,6 +56,8 @@ public class GameController : MonoBehaviour
 
     private void StartGame(bool clearScore = true)
     {
+        fullHintUsed = 0;
+        fiftyFiftyUsed = 0;
         answersCanvasGroup.interactable = true;
         if (clearScore) score = 0;
         StartCoroutine(TextUpdater.UpdateText(scoreText, score.ToString()));
@@ -244,68 +247,82 @@ public class GameController : MonoBehaviour
         useTimer = true;
         timer = timeToAnswer;
     }
-
+    
     void UseHint(HINT_TYPE hintType)
     {
         int totalCoins = PlayerPrefs.GetInt("COINS", 0);
         int hintCost = 0;
 
+        // Variables to track hint usage
+
+        // Check if FULL_HINT has already been used
+        if (hintType == HINT_TYPE.FULL_HINT && fullHintUsed == 1)
+        {
+            Debug.Log("FULL_HINT has already been used in this function call.");
+            return; // Exit the function, as FULL_HINT can only be used once
+        }
+
+        // Check if FIFTY_FIFTY has already been used twice
+        if (hintType == HINT_TYPE.FIFTY_FIFTY && fiftyFiftyUsed == 2)
+        {
+            Debug.Log("FIFTY_FIFTY has already been used twice in this function call.");
+            return; // Exit the function, as FIFTY_FIFTY can be used twice
+        }
+
+        // Determine hint cost
         switch (hintType)
         {
             case HINT_TYPE.FULL_HINT:
                 hintCost = 25;
                 break;
-            case HINT_TYPE.NEW_ANSWER:
-                hintCost = 5;
-                break;
             case HINT_TYPE.FIFTY_FIFTY:
                 hintCost = 15;
                 break;
+            case HINT_TYPE.NEW_ANSWER:
+                hintCost = 5;
+                break;
         }
 
-        if (hintCost > 0)
+        // Check if user has enough coins
+        if (totalCoins < hintCost)
         {
-            if (totalCoins >= hintCost)
-            {
-                // Выполнить подсказку в соответствии с ее типом
-                switch (hintType)
+            Debug.Log("Not enough coins for this hint.");
+            return;
+        }
+
+        // Handle the specific hint type only if it hasn't been used already
+        switch (hintType)
+        {
+            case HINT_TYPE.FULL_HINT:
+                fullHintUsed = 1;
+                GameAction.showCorrectAnswer(FindCorrecAnswer());
+                break;
+            case HINT_TYPE.FIFTY_FIFTY:
+                fiftyFiftyUsed++;
+                int correctAnswer = FindCorrecAnswer();
+                int randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                int randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+
+                while (correctAnswer == randomWrongAnswer1)
                 {
-                    case HINT_TYPE.FULL_HINT:
-                        GameAction.showCorrectAnswer(FindCorrecAnswer());
-                        break;
-                    case HINT_TYPE.NEW_ANSWER:
-                        StartGame(false);
-                        break;
-                    case HINT_TYPE.FIFTY_FIFTY:
-
-                        int correctAnswer = FindCorrecAnswer();
-                        int randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
-                        int randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
-
-                        while (correctAnswer == randomWrongAnswer1)
-                        {
-                            randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
-                        }
-
-                        while (correctAnswer == randomWrongAnswer2 || randomWrongAnswer1 == randomWrongAnswer2)
-                        {
-                            randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
-                        }
-
-                        GameAction.disableHalfAnswers?.Invoke(randomWrongAnswer1, randomWrongAnswer2);
-                        break;
+                    randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
                 }
 
-                // Вычесть стоимость подсказки из монет
-                Globals.instance.AddCoins(-hintCost);
-                Debug.Log($"Hint used. Cost: {hintCost} coins. Remaining coins: {totalCoins}");
-                Debug.Log("Total Coins: " + totalCoins);
-            }
-            else
-            {
-                Debug.Log("Not enough coins for this hint.");
-                Debug.Log("Total Coins: " + totalCoins);
-            }
+                while (correctAnswer == randomWrongAnswer2 || randomWrongAnswer1 == randomWrongAnswer2)
+                {
+                    randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                }
+
+                GameAction.disableHalfAnswers?.Invoke(randomWrongAnswer1, randomWrongAnswer2);
+                break;
+            case HINT_TYPE.NEW_ANSWER:
+                StartGame(false);
+                break;
         }
+
+        // Deduct the hint cost from total coins
+        totalCoins -= hintCost;
+        PlayerPrefs.SetInt("COINS", totalCoins);
+        Debug.Log($"Hint used. Cost: {hintCost} coins. Remaining coins: {totalCoins}");
     }
 }
