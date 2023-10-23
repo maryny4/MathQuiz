@@ -164,7 +164,7 @@ public class GameController : MonoBehaviour
         fiftyFiftyUsed = 0;
         Debug.Log("AnsweredCorrectly");
         score++;
-
+        
         // Добавляем монету только в случае верного ответа и быстрее 5 секунд
         float timeSpent = timeToAnswer - timer;
         int coinsToAdd = 0;
@@ -178,24 +178,26 @@ public class GameController : MonoBehaviour
         }
 
         Globals.instance.AddCoins(coinsToAdd);
-
+        int totalCoins = PlayerPrefs.GetInt("COINS", 0);
+        StartCoroutine(TextUpdater.UpdateText(coinsText, totalCoins.ToString()));
         StartCoroutine(TextUpdater.UpdateText(scoreText, score.ToString()));
         ResetTimer();
         GenerateRiddle();
     }
     private static int consecutiveLosses = 0;
-    private float lastAdTime = 0f;
-    bool CanShowAd(int score, int timer, int consecutiveLosses)
+    DateTime lastAdTime = DateTime.Now;
+
+    bool CanShowAd(int score, int consecutiveLosses)
     {
         if (score >= 20)
         {
             Debug.Log("Показываем рекламу, потому что счет больше 20, Прошло менее минуты с последнего показа рекламы");
             consecutiveLosses = 0;
-            lastAdTime = Time.time;
-            
+            lastAdTime = DateTime.Now;
+        
             return true;
         }
-        if (Time.time - lastAdTime < 60f)
+        if ((DateTime.Now - lastAdTime).TotalSeconds < 60)
         {
             return false; // еще не прошла минута
         }
@@ -205,10 +207,10 @@ public class GameController : MonoBehaviour
             // Показываем рекламу и сбрасываем счетчик
             Debug.Log("Показываем рекламу, потому что проиграно больше 3 раз подряд со счетом больше 1, Прошло более минуты с последнего показа рекламы");
             consecutiveLosses = 0;
-            lastAdTime = Time.time;
+            lastAdTime = DateTime.Now;
             return true;
         }
-        
+    
         return false;
     }
     void AnsweredWrongly(int wrongAnswer)
@@ -224,7 +226,7 @@ public class GameController : MonoBehaviour
         consecutiveLosses++;
 
         // Проверяем, можно ли показывать рекламу
-        if (CanShowAd(score, (int)timer, consecutiveLosses))
+        if (CanShowAd(score, consecutiveLosses))
         {
             Debug.Log("Can show ad");
             // Ваш код для показа рекламы
