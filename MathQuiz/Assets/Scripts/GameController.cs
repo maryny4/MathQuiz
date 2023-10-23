@@ -56,8 +56,6 @@ public class GameController : MonoBehaviour
 
     private void StartGame(bool clearScore = true)
     {
-        fullHintUsed = 0;
-        fiftyFiftyUsed = 0;
         answersCanvasGroup.interactable = true;
         if (clearScore) score = 0;
         StartCoroutine(TextUpdater.UpdateText(scoreText, score.ToString()));
@@ -73,6 +71,7 @@ public class GameController : MonoBehaviour
         else AnsweredWrongly(answerIndex);
     }
 
+    
 
     void GenerateRiddle()
     {
@@ -157,8 +156,11 @@ public class GameController : MonoBehaviour
         StartCoroutine(TextUpdater.UpdateText(riddleText, currentRiddle.GetRiddle));
     }
 
+    
     void AnsweredCorrectly()
     {
+        fullHintUsed = 0;
+        fiftyFiftyUsed = 0;
         Debug.Log("AnsweredCorrectly");
         score++;
 
@@ -180,7 +182,33 @@ public class GameController : MonoBehaviour
         ResetTimer();
         GenerateRiddle();
     }
-
+    private static int consecutiveLosses = 0;
+    private float lastAdTime = 0f;
+    bool CanShowAd(int score, int timer, int consecutiveLosses)
+    {
+        if (Time.time - lastAdTime < 60f)
+        {
+            return false; // еще не прошла минута
+        }
+        // Проверяем, прошла ли минута с последнего показа рекламы
+        if (consecutiveLosses >= 3 && score > 1)
+        {
+            // Показываем рекламу и сбрасываем счетчик
+            Debug.Log("Показываем рекламу, потому что проиграно больше 3 раз подряд со счетом больше 1, Прошло более минуты с последнего показа рекламы");
+            consecutiveLosses = 0;
+            lastAdTime = Time.time;
+            return true;
+        }
+        if (score >= 20)
+        {
+            Debug.Log("Показываем рекламу, потому что счет больше 20, Прошло более минуты с последнего показа рекламы");
+            consecutiveLosses = 0;
+            lastAdTime = Time.time;
+            
+            return true;
+        }
+        return false;
+    }
     void AnsweredWrongly(int wrongAnswer)
     {
         Debug.Log("AnsweredWrongly");
@@ -189,6 +217,19 @@ public class GameController : MonoBehaviour
         useTimer = false;
         gameOverPanel.ShowPanelWithDelay(score, "WRONG ANSWER");
         Debug.Log("time has passed");
+
+        // Увеличиваем счетчик проигрышей подряд
+        consecutiveLosses++;
+
+        // Проверяем, можно ли показывать рекламу
+        if (CanShowAd(score, (int)timer, consecutiveLosses))
+        {
+            Debug.Log("Can show ad");
+            // Ваш код для показа рекламы
+            
+            consecutiveLosses = 0;
+            
+        }
     }
 
 
