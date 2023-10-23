@@ -228,12 +228,18 @@ public class GameController : MonoBehaviour
         {
             Debug.Log("Can show ad");
             // Ваш код для показа рекламы
+            StartCoroutine(ShowAdWithDelay());
             
             consecutiveLosses = 0;
             
         }
     }
-
+    
+    IEnumerator ShowAdWithDelay()
+    {
+        yield return new WaitForSeconds(.7f);
+        InterstitialAdController.instance.ShowAd();
+    }
 
     int FindCorrecAnswer()
     {
