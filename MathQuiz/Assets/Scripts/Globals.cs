@@ -52,7 +52,12 @@ public class Globals : MonoBehaviour
         rangeOfDifficulty = PlayerPrefs.GetInt("rangeOfDifficulty", 15);
         negativeRange = PlayerPrefs.GetInt("NEGATIVE_RANGE") == 1;
     }
-    
+
+    private void OnApplicationQuit()
+    {
+        GameAnalytics.NewDesignEvent("END_SESSION_COIN_COUNT " + PlayerPrefs.GetInt("COINS"));
+    }
+
     /// <param name="coinsToAdd"></param>
     public void AddCoins(int coinsToAdd)
     {
@@ -105,6 +110,8 @@ public static class GameAction
     public static Action<HINT_TYPE> useHint;
     public static Action<int, int> disableHalfAnswers;
     public static Action<int> showCorrectAnswer;
+    public static Action resetHints;
+    public static Action<HINT_TYPE> disableHint;
 }
 
 public enum GAME_MODE

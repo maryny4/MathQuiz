@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using GameAnalyticsSDK;
+using GameAnalyticsSDK.Setup;
 
 
 public class GameController : MonoBehaviour
@@ -57,12 +58,11 @@ public class GameController : MonoBehaviour
 
     private void StartGame(bool clearScore = true)
     {
-        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, "GameStart_ " + Globals.instance.GetCurrentGameMode);
         Globals.instance.RewardCoins = 0;
         answersCanvasGroup.interactable = true;
         if (clearScore) score = 0;
-        StartCoroutine(TextUpdater.UpdateText(coinsText, PlayerPrefs.GetInt("COINS", 0).ToString()));
-        StartCoroutine(TextUpdater.UpdateText(scoreText, score.ToString()));
+        StartCoroutine(TextUpdater.UpdateText(coinsText, PlayerPrefs.GetInt("COINS", 0) + "<sprite=0>"));
+        StartCoroutine(TextUpdater.UpdateText(scoreText, score + " <sprite=0>"));
         useTimer = true;
         useSecondLife = false;
         ResetTimer();
@@ -79,6 +79,11 @@ public class GameController : MonoBehaviour
 
     void GenerateRiddle()
     {
+        fullHintUsed = 0;
+        fiftyFiftyUsed = 0;
+        GameAction.resetHints?.Invoke();
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, "GameStart_ " + Globals.instance.GetCurrentGameMode);
+        
         int MinValue = Globals.instance.NegativeRangeState ? -Globals.instance.GetRangeOfDifficulty : 0;
         int MaxValue = Globals.instance.GetRangeOfDifficulty;
         int MinValueWithandWithoutBrackets = MinValue;
@@ -164,16 +169,13 @@ public class GameController : MonoBehaviour
     
     void AnsweredCorrectly()
     {
-        
-        fullHintUsed = 0;
-        fiftyFiftyUsed = 0;
         Debug.Log("AnsweredCorrectly");
         score++;
         GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete,"LevelComplete_ " + Globals.instance.GetCurrentGameMode);
-        // Добавляем монету только в случае верного ответа и быстрее 5 секунд
+        // Добавляем монету только в случае верного ответа и быстрее 1/2 timeSpent
         float timeSpent = timeToAnswer - timer;
         int coinsToAdd = 0;
-        if (timeSpent < 5.0f)
+        if (timeSpent < timeToAnswer / 2)
         {
             coinsToAdd = 2;
         }
@@ -184,8 +186,8 @@ public class GameController : MonoBehaviour
 
         Globals.instance.AddCoins(coinsToAdd);
         int totalCoins = PlayerPrefs.GetInt("COINS", 0);
-        StartCoroutine(TextUpdater.UpdateText(coinsText, totalCoins.ToString()));
-        StartCoroutine(TextUpdater.UpdateText(scoreText, score.ToString()));
+        StartCoroutine(TextUpdater.UpdateText(coinsText, totalCoins + "<sprite=0>"));
+        StartCoroutine(TextUpdater.UpdateText(scoreText, score + " <sprite=0>"));
         ResetTimer();
         GenerateRiddle();
     }
@@ -225,7 +227,9 @@ public class GameController : MonoBehaviour
         answersCanvasGroup.interactable = false;
         GameAction.setButtonsColor(FindCorrecAnswer(), wrongAnswer);
         GameAnalytics.NewProgressionEvent(GAProgressionStatus.Fail, "GameOver_ " + Globals.instance.GetCurrentGameMode);
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Fail, "GameOver_ " + Globals.instance.GetCurrentGameMode, score);
         useTimer = false;
+        
         gameOverPanel.ShowPanelWithDelay(score, "WRONG ANSWER");
         Debug.Log("time has passed");
 
@@ -354,11 +358,16 @@ public class GameController : MonoBehaviour
             case HINT_TYPE.FULL_HINT:
                 fullHintUsed = 1;
                 fiftyFiftyUsed = 2;
+                GameAction.disableHint(HINT_TYPE.FULL_HINT);
+                GameAction.disableHint(HINT_TYPE.FIFTY_FIFTY);
                 GameAction.showCorrectAnswer(FindCorrecAnswer());
                 GameAnalytics.NewDesignEvent("Game_Hint_Use_FullHint");
                 break;
             case HINT_TYPE.FIFTY_FIFTY:
                 fiftyFiftyUsed++;
+                
+                if(fiftyFiftyUsed >= 2) GameAction.disableHint(HINT_TYPE.FIFTY_FIFTY);
+                
                 int correctAnswer = FindCorrecAnswer();
                 int randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
                 int randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
@@ -386,6 +395,6 @@ public class GameController : MonoBehaviour
         totalCoins -= hintCost;
         PlayerPrefs.SetInt("COINS", totalCoins);
         Debug.Log($"Hint used. Cost: {hintCost} coins. Remaining coins: {totalCoins}");
-        StartCoroutine(TextUpdater.UpdateText(coinsText, totalCoins.ToString()));
+        StartCoroutine(TextUpdater.UpdateText(coinsText, totalCoins + "<sprite=0>"));
     }
 }

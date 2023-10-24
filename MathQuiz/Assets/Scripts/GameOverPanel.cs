@@ -32,7 +32,7 @@ public class GameOverPanel : PageAnimation
         titleText.text = title;
         scoreText.text = "SCORE: " + score;
         bestScoreText.text = "BEST SCORE: " + bestScore;
-        rewardCoinCountText.text = "+" + Globals.instance.RewardCoins;
+        rewardCoinCountText.text = "+" + Globals.instance.RewardCoins + " <sprite=0>";
         _2xRewardButton.gameObject.SetActive(Globals.instance.RewardCoins > 0);
         base.ShowPanel();
     }
@@ -40,7 +40,7 @@ public class GameOverPanel : PageAnimation
     public void Used_2x_Reward()
     {
         _2xRewardButton.gameObject.SetActive(false);
-        rewardCoinCountText.text = "+" + Globals.instance.RewardCoins;
+        rewardCoinCountText.text = "+" + Globals.instance.RewardCoins + " <sprite=0>";
     }
 
     void RestartGame()
