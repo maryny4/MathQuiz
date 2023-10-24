@@ -6,6 +6,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using GameAnalyticsSDK;
+
 
 public class GameController : MonoBehaviour
 {
@@ -34,10 +36,10 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        
         GameAction.onClickAnswer += CheckAnswer;
         GameAction.startGame += StartGame;
         GameAction.useHint += UseHint;
-
         StartGame();
     }
 
@@ -55,6 +57,7 @@ public class GameController : MonoBehaviour
 
     private void StartGame(bool clearScore = true)
     {
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, "GameStart_ " + Globals.instance.GetCurrentGameMode);
         Globals.instance.RewardCoins = 0;
         answersCanvasGroup.interactable = true;
         if (clearScore) score = 0;
@@ -89,7 +92,7 @@ public class GameController : MonoBehaviour
 
         string riddle = "riddle";
         List<string> answers = new List<string> { "correct", "wrong", "wrong1", "wrong2" };
-
+        
         switch (Globals.instance.GetCurrentGameMode)
         {
             case GAME_MODE.FULL:
@@ -136,6 +139,7 @@ public class GameController : MonoBehaviour
                 answers = doubleList;
                 break;
             case GAME_MODE.MULTIPLICATION_AND_DIVISION:
+                
                 (string multiplicationAndDivisionExample, double multiplicationAndDivisionResult) =
                     FunctionForGenerator.GenerateMultiplicationAndDivisionRiddle(MinValue, MaxValue);
                 (List<string> multiplicationAndDivisionList,
@@ -160,11 +164,12 @@ public class GameController : MonoBehaviour
     
     void AnsweredCorrectly()
     {
+        
         fullHintUsed = 0;
         fiftyFiftyUsed = 0;
         Debug.Log("AnsweredCorrectly");
         score++;
-        
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete,"LevelComplete_ " + Globals.instance.GetCurrentGameMode);
         // Добавляем монету только в случае верного ответа и быстрее 5 секунд
         float timeSpent = timeToAnswer - timer;
         int coinsToAdd = 0;
@@ -194,7 +199,7 @@ public class GameController : MonoBehaviour
             Debug.Log("Показываем рекламу, потому что счет больше 15, Прошло менее минуты с последнего показа рекламы");
             consecutiveLosses = 0;
             lastAdTime = DateTime.Now;
-        
+            GameAnalytics.NewDesignEvent("Show_ad_if_score_more_15");
             return true;
         }
         if ((DateTime.Now - lastAdTime).TotalSeconds < 60)
@@ -208,6 +213,7 @@ public class GameController : MonoBehaviour
             Debug.Log("Показываем рекламу, потому что проиграно больше 3 раз подряд со счетом больше 1, Прошло более минуты с последнего показа рекламы");
             consecutiveLosses = 0;
             lastAdTime = DateTime.Now;
+            GameAnalytics.NewDesignEvent("Show_ad_if_3lose_with_score_more_1");
             return true;
         }
     
@@ -218,6 +224,7 @@ public class GameController : MonoBehaviour
         Debug.Log("AnsweredWrongly");
         answersCanvasGroup.interactable = false;
         GameAction.setButtonsColor(FindCorrecAnswer(), wrongAnswer);
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Fail, "GameOver_ " + Globals.instance.GetCurrentGameMode);
         useTimer = false;
         gameOverPanel.ShowPanelWithDelay(score, "WRONG ANSWER");
         Debug.Log("time has passed");
@@ -325,7 +332,6 @@ public class GameController : MonoBehaviour
         {
             case HINT_TYPE.FULL_HINT:
                 hintCost = 25;
-                
                 break;
             case HINT_TYPE.FIFTY_FIFTY:
                 hintCost = 15;
@@ -349,6 +355,7 @@ public class GameController : MonoBehaviour
                 fullHintUsed = 1;
                 fiftyFiftyUsed = 2;
                 GameAction.showCorrectAnswer(FindCorrecAnswer());
+                GameAnalytics.NewDesignEvent("Game_Hint_Use_FullHint");
                 break;
             case HINT_TYPE.FIFTY_FIFTY:
                 fiftyFiftyUsed++;
@@ -367,9 +374,11 @@ public class GameController : MonoBehaviour
                 }
 
                 GameAction.disableHalfAnswers?.Invoke(randomWrongAnswer1, randomWrongAnswer2);
+                GameAnalytics.NewDesignEvent("Game_Hint_Use_FiftyFifty");
                 break;
             case HINT_TYPE.NEW_ANSWER:
                 StartGame(false);
+                GameAnalytics.NewDesignEvent("Game_Hint_Use_NewAnswer");
                 break;
         }
 

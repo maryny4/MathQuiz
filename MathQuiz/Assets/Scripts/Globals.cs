@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using GameAnalyticsSDK;
 public class Globals : MonoBehaviour
 {
     public static Globals instance;
@@ -14,6 +15,7 @@ public class Globals : MonoBehaviour
     /// GAME_MODE
     private GAME_MODE currentGameMode;
     public GAME_MODE GetCurrentGameMode => currentGameMode;
+    
     public void SetCurrentGameMode(GAME_MODE gameMode) => currentGameMode = gameMode;
     /// rangeOfDifficulty
     private int rangeOfDifficulty;
@@ -65,6 +67,7 @@ public class Globals : MonoBehaviour
     public void X2_Coin()
     {
         Debug.Log("X2_COINS " + RewardCoins);
+        GameAnalytics.NewDesignEvent("Using X2_ADB");
         AddCoins(RewardCoins);
     }
 
