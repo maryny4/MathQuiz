@@ -191,7 +191,7 @@ public class GameController : MonoBehaviour
     {
         if (score >= 15)
         {
-            Debug.Log("Показываем рекламу, потому что счет больше 20, Прошло менее минуты с последнего показа рекламы");
+            Debug.Log("Показываем рекламу, потому что счет больше 15, Прошло менее минуты с последнего показа рекламы");
             consecutiveLosses = 0;
             lastAdTime = DateTime.Now;
         
