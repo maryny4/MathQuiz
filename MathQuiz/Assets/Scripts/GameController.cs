@@ -31,6 +31,8 @@ public class GameController : MonoBehaviour
     private int fullHintUsed = 0;
     private int fiftyFiftyUsed = 0;
 
+    private int disabledAnswersByHintFiftyFifty_1 = -10;
+    private int disabledAnswersByHintFiftyFifty_2 = -10; 
     private List<string> shuffledCurrentAnswers;
     [SerializeField] private List<string> Answers;
     private Riddle currentRiddle = new Riddle();
@@ -79,6 +81,9 @@ public class GameController : MonoBehaviour
 
     void GenerateRiddle()
     {
+        disabledAnswersByHintFiftyFifty_1 = -10;//це просто такий ресет зміних (головне щоб не було 0-3)
+        disabledAnswersByHintFiftyFifty_2 = -10;
+        
         fullHintUsed = 0;
         fiftyFiftyUsed = 0;
         GameAction.resetHints?.Invoke();
@@ -372,15 +377,27 @@ public class GameController : MonoBehaviour
                 int randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
                 int randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
 
-                while (correctAnswer == randomWrongAnswer1)
+                while (correctAnswer == randomWrongAnswer1 || disabledAnswersByHintFiftyFifty_1 == randomWrongAnswer1 ||
+                       disabledAnswersByHintFiftyFifty_2 == randomWrongAnswer1)
                 {
                     randomWrongAnswer1 = Random.Range(0, shuffledCurrentAnswers.Capacity);
                 }
-
-                while (correctAnswer == randomWrongAnswer2 || randomWrongAnswer1 == randomWrongAnswer2)
+                
+                if (disabledAnswersByHintFiftyFifty_1 < 0)//якщо менше нуля, то це перша підказка 50/50
                 {
-                    randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                    while (correctAnswer == randomWrongAnswer2 || randomWrongAnswer1 == randomWrongAnswer2)
+                    {
+                        randomWrongAnswer2 = Random.Range(0, shuffledCurrentAnswers.Capacity);
+                    }
                 }
+                else
+                {
+                    GameAction.disableHint(HINT_TYPE.FULL_HINT);
+                    randomWrongAnswer2 = -10;
+                }
+
+                disabledAnswersByHintFiftyFifty_1 = randomWrongAnswer1;
+                disabledAnswersByHintFiftyFifty_2 = randomWrongAnswer2;
 
                 GameAction.disableHalfAnswers?.Invoke(randomWrongAnswer1, randomWrongAnswer2);
                 GameAnalytics.NewDesignEvent("Game_Hint_Use_FiftyFifty");
