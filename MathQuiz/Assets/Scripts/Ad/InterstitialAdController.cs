@@ -12,7 +12,7 @@ public class InterstitialAdController : MonoBehaviour
     public static InterstitialAdController instance;
     private readonly string interstitialId = /*"ca-app-pub-4370112603446132/7605784049";*/ "ca-app-pub-3940256099942544/1033173712";//test key
     
-    void Awake()
+    void Start()
     {
         if (instance != null)
         {

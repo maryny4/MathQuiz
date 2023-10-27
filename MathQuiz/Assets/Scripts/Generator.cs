@@ -521,7 +521,7 @@ public static class Checkingbrackets
 {
     public static string CheckingbracketsProcess(string input)
     {
-        // Разделяем строку на отдельные элементы
+        /*// Разделяем строку на отдельные элементы
         string[] elements = input.Split(' ');
 
         // Обработка чисел с минусом
@@ -537,14 +537,8 @@ public static class Checkingbrackets
         // Склеиваем элементы обратно в строку
         string result = string.Join(" ", elements);
 
-        return result;
+        return result;*/
+        
+        return Regex.Replace(input, @"(-\d+)", "($1)");
     }
-
-
-
-
-
-
-
-    
 }
