@@ -6,7 +6,7 @@ public class RewardedAdController : MonoBehaviour
 {
     public static RewardedAdController instance;
     private RewardedAd rewardedAd;
-    private readonly string rewardedId = /*"ca-app-pub-4370112603446132/6143973658";*/ "ca-app-pub-3940256099942544/5224354917";//test key
+    private readonly string rewardedId = "ca-app-pub-4370112603446132/6143973658";// "ca-app-pub-3940256099942544/5224354917";//test key
     void Start()
     {
         if (instance != null)
